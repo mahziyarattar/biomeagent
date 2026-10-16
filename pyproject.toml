@@ -1,0 +1,22 @@
+[project]
+name = "biomeagent"
+version = "0.1.0"
+description = "Thesis assistant over free public biology APIs."
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "httpx",
+    "langchain-core",
+    "langchain-openai",
+    "langgraph",
+    "markdown",
+    "streamlit",
+    "uvicorn",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[project.optional-dependencies]
+dev = ["pytest", "httpx"]
