@@ -1,7 +1,7 @@
 import json
 from urllib.parse import urlencode
 
-from biomeagent.assemble import NO_SOURCE, assemble
+from biomeagent.assemble import NO_SOURCE, assemble, visible_calls
 from biomeagent.sources import (
     annotate_paper,
     lookup_bacdive,
@@ -332,6 +332,9 @@ def test_empty_tool_result_is_not_an_error():
     assert response["errors"] == []
     assert response["reply"] == "Nothing matched."
     assert response["calls"] == [{"tool": "search_trials", "records": [], "error": None}]
+    assert visible_calls(response["calls"]) == []
+    failed = [{"tool": "lookup_pubchem", "records": [], "error": "timed out"}]
+    assert visible_calls(failed) == failed
 
 
 def test_two_calls_to_the_same_source_stay_apart():

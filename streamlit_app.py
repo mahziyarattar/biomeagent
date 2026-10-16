@@ -8,6 +8,7 @@ import httpx
 import streamlit as st
 
 from biomeagent.agent import Tool
+from biomeagent.assemble import visible_calls
 from biomeagent.direction import message_view
 from biomeagent.sse import parse_sse
 
@@ -87,7 +88,7 @@ def _field_text(value):
 
 
 def _show_sources(trace):
-    calls = _calls(trace)
+    calls = visible_calls(_calls(trace))
     if not calls:
         return
     with st.expander("Sources", expanded=False):
@@ -96,8 +97,6 @@ def _show_sources(trace):
                 if call.get("error"):
                     st.markdown(call["error"])
                 records = call.get("records") or []
-                if not records and not call.get("error"):
-                    st.markdown("No records.")
                 for record in records:
                     name = record.get("name") or record.get("title") or "Record"
                     st.markdown(f"**{name}**")
@@ -130,6 +129,10 @@ st.markdown(
 [data-testid="stChatMessage"] [dir="rtl"] {
   font-family: Vazir, sans-serif;
   text-align: start;
+}
+[data-testid="stChatMessage"] [dir="rtl"] :is(h1, h2, h3, h4, h5, h6, h1 span, h2 span, h3 span, h4 span, h5 span, h6 span) {
+  font-family: Vazir, sans-serif !important;
+  font-weight: 700;
 }
 [data-testid="stChatMessage"] [dir="rtl"] ul,
 [data-testid="stChatMessage"] [dir="rtl"] ol {

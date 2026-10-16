@@ -5,6 +5,11 @@ import json
 NO_SOURCE = "No source returned anything."
 
 
+def visible_calls(calls):
+    """A call with no records and no error is not shown."""
+    return [call for call in calls or [] if call.get("records") or call.get("error")]
+
+
 def assemble(messages):
     tool_messages = [message for message in messages if _role(message) == "tool"]
     records = []
