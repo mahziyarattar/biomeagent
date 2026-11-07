@@ -6,6 +6,29 @@ BiomeAgent answers questions about microbes, metabolites, papers, and trials. Yo
 
 ![A BiomeAgent reply for butyrate. The PubChem source is open, showing CID 104775 and formula C4H7O2-.](docs/screenshot.png)
 
+## How answers stay grounded
+
+The agent has eight tools, one per source:
+
+| Tool | Source | Returns |
+| --- | --- | --- |
+| `search_europepmc` | Europe PMC | Up to five papers: PMID, title, abstract or clipped open-access full text |
+| `annotate_paper` | Europe PMC Annotations | Text-mined mentions in one paper |
+| `lookup_pubchem` | PubChem | CID, title, formula |
+| `lookup_vmh` | VMH | Metabolite abbreviation, formula, reactions, microbes |
+| `search_trials` | ClinicalTrials.gov | NCT id, title, intervention text |
+| `lookup_bacdive` | BacDive | Strain id and culture-collection numbers |
+| `lookup_taxon` | NCBI Taxonomy | Taxonomy id, name, rank |
+| `lookup_omnipath` | OmniPath | Chemical-protein interactions with PubMed ids |
+
+The model picks the tools and writes the reply. It does not write the records. After each turn, Python reads the tool results and copies them into `records` (see `biomeagent/assemble.py`). A PMID, CID, NCT id, or taxonomy id is in `records` only if a tool returned it on that turn. The Sources panel in the UI shows those records next to the reply.
+
+Each tool catches its own failure. A timeout, an HTTP error, or the VMH hourly cap puts that tool's name in `errors`, and the records from the other tools stay. An empty result counts as a successful call. If every call fails, the reply is replaced with "No source returned anything."
+
+The agent does not write SPARQL. `lookup_vmh` runs three fixed queries and rejects a SPARQL string as input.
+
+Some rules live only in the system prompt, because code cannot check them in prose: do not name an identifier that no tool returned; treat an annotation as a mention, not a curated effect; keep a postbiotic preparation and a metabolite apart; give no personal dose or medical instruction. A dose or duration may be quoted only when that string is already in an abstract, an open-access full text, or a trial's intervention text.
+
 ## Setup
 
 Python 3.11 or newer.
