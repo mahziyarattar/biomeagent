@@ -1,6 +1,10 @@
 # BiomeAgent
 
+[![tests](https://github.com/mahziyarattar/biomeagent/actions/workflows/tests.yml/badge.svg)](https://github.com/mahziyarattar/biomeagent/actions/workflows/tests.yml)
+
 BiomeAgent answers questions about microbes, metabolites, papers, and trials. You ask in ordinary language. A ReAct agent calls free public APIs, and the reply uses the records those calls return. Streamlit is the chat window. FastAPI runs the agent.
+
+![A BiomeAgent reply for butyrate. The PubChem source is open, showing CID 104775 and formula C4H7O2-.](docs/screenshot.png)
 
 ## Setup
 
@@ -65,3 +69,9 @@ Live checks against Europe PMC, PubChem, NCBI Taxonomy, VMH, and OmniPath:
 ```bash
 EVAL_LIVE=1 pytest tests/test_live.py
 ```
+
+## License
+
+The code is under the MIT license. See [LICENSE](LICENSE).
+
+The Vazirmatn font files in `biomeagent/fonts/` stay under the SIL Open Font License. See [biomeagent/fonts/OFL.txt](biomeagent/fonts/OFL.txt).
